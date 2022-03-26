@@ -16,10 +16,7 @@ public class ApproximationResult {
         this.coefficients = coefficients;
         this.function = function;
         this.deviation = deviation;
-        functionToString = type == ApproximationType.LINEAR
-                ? String.format("%fx +%f", coefficients[0], coefficients[1])
-                : String.format("%fx^2 + %fx + %f", coefficients[0], coefficients[1], coefficients[2]);
-
+        functionToString = coefficientsToString();
     }
 
     public ApproximationResult(ApproximationType type, double[] coefficients, Function<Double, Double> function, double deviation, double correlation) {
@@ -42,6 +39,20 @@ public class ApproximationResult {
 
     public double getDeviation() {
         return deviation;
+    }
+
+    private String coefficientsToString() {
+        String toStr;
+        switch(type) {
+            case LINEAR -> toStr = String.format("%fx +%f", coefficients[0], coefficients[1]);
+            case QUADRATIC -> toStr = String.format("%fx^2 + %fx + %f", coefficients[0], coefficients[1], coefficients[2]);
+            case EXPONENTIAL -> toStr = String.format("%fe^(%fx)", coefficients[1], coefficients[0]);
+            case LOGARITHMIC -> toStr = String.format("%flnx + %f", coefficients[0], coefficients[1]);
+            case POWER -> toStr = String.format("%fx^(%f)", coefficients[1], coefficients[0]);
+            case CUBIC -> toStr = String.format("%fx^3 + %fx^2 + %fx + %f", coefficients[0], coefficients[1], coefficients[2], coefficients[3]);
+            default -> toStr = null;
+        }
+        return toStr;
     }
 
     @Override

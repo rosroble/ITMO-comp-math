@@ -3,7 +3,10 @@ import approximation.Approximator;
 import plot.GraphFrame;
 
 import java.io.*;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -25,14 +28,21 @@ public class Runner {
         init();
         ApproximationResult linear = approximator.linearApproximation(functionTable);
         ApproximationResult quadratic = approximator.squareApproximation(functionTable);
+        ApproximationResult exponential = approximator.exponentialApproximation(functionTable);
+        ApproximationResult logarithmic = approximator.logarithmicApproximation(functionTable);
+        ApproximationResult power = approximator.powerApproximation(functionTable);
+        ApproximationResult cubic = approximator.cubicApproximation(functionTable);
         System.out.println(linear);
         System.out.println(quadratic);
-        Function<Double, Double> functionToGraph = linear.getDeviation() <= quadratic.getDeviation()
-                ? linear.getFunction()
-                : quadratic.getFunction();
+        System.out.println(exponential);
+        System.out.println(logarithmic);
+        System.out.println(power);
+        System.out.println(cubic);
+        List<ApproximationResult> list = new ArrayList<>(List.of(linear, quadratic, exponential, logarithmic, power, cubic));
+        list.sort(Comparator.comparingDouble(ApproximationResult::getDeviation));
         frame.graph(functionTable[0][0] - 2,
                 functionTable[functionTable.length - 1][0] + 2,
-                functionToGraph);
+                list.get(0).getFunction());
     }
 
     private void init() throws IOException {
@@ -47,8 +57,8 @@ public class Runner {
         while (true) {
             try {
                 pairs = Integer.parseInt(reader.readLine());
-                if (pairs < 8) {
-                    System.err.println("Pairs amount >= 8. Try again.");
+                if (pairs < 6) {
+                    System.err.println("Pairs amount >= 6. Try again.");
                     continue;
                 }
                 functionTable = new double[pairs][2];

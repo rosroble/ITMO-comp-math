@@ -1,5 +1,5 @@
 package approximation;
 
 public enum ApproximationType {
-    LINEAR, QUADRATIC
+    LINEAR, QUADRATIC, CUBIC, EXPONENTIAL, LOGARITHMIC, POWER
 }
